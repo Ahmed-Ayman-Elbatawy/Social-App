@@ -1,0 +1,164 @@
+<nav class="sticky top-0 z-50 border-b border-gray-200/70 bg-white/80 backdrop-blur-md">
+  <div
+    class="mx-auto grid h-[58px] max-w-[1400px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 sm:px-6 lg:px-14"
+  >
+    <!-- Logo -->
+    <a routerLink="/timeline" class="flex shrink-0 items-center gap-2 justify-self-start sm:gap-3">
+      <span
+        class="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-mainColor to-mainDark text-white shadow-md shadow-mainColor/25 sm:h-10 sm:w-10"
+      >
+        <svg
+          viewBox="2 2 20 20"
+          class="h-5 w-5 sm:h-6 sm:w-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 2.5l8.2 4.75v8.5L12 20.5l-3-1.7L4.2 21.6l1-4.6-1.4-1.25v-8.5z" />
+          <path d="M7.6 11.6h2l1.3-2.8 2 5.6 1.3-2.8h2.2" class="stroke-accent" />
+        </svg>
+      </span>
+      <span
+        class="hidden whitespace-nowrap text-lg font-extrabold tracking-tight text-mainColor sm:inline lg:text-xl"
+      >
+        Synapse
+      </span>
+    </a>
+
+    <!-- Center tabs -->
+    <ul
+      class="flex items-center gap-0.5 rounded-2xl border border-gray-200 bg-secondaryColor/70 p-1 md:gap-1"
+    >
+      <li>
+        <a
+          routerLink="/timeline"
+          routerLinkActive="bg-mainColor! text-white! shadow-sm"
+          aria-label="Feed"
+          class="flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-slate-600 transition hover:bg-white hover:text-mainColor md:px-4"
+        >
+          <i class="fa-regular fa-house text-base"></i>
+          <span class="hidden md:inline">Feed</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/my-profile"
+          routerLinkActive="bg-mainColor! text-white! shadow-sm"
+          aria-label="Profile"
+          class="flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-slate-600 transition hover:bg-white hover:text-mainColor md:px-4"
+        >
+          <i class="fa-regular fa-user text-base"></i>
+          <span class="hidden md:inline">Profile</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/notifications"
+          routerLinkActive="bg-mainColor! text-white! shadow-sm"
+          aria-label="Notifications"
+          class="relative flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-slate-600 transition hover:bg-white hover:text-mainColor md:px-4"
+        >
+          <div class="relative">
+            <i class="fa-regular fa-bell text-base"></i>
+
+            <!-- نقطة التنبيه تظهر فقط لو فيه إشعارات جديدة -->
+            @if (notificationCount() > 0) {
+              <span class="absolute -top-1 -right-1 flex h-2 w-2">
+                <span
+                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75"
+                ></span>
+                <span class="relative inline-flex h-2 w-2 rounded-full bg-accent"></span>
+              </span>
+            }
+          </div>
+
+          <span class="hidden md:inline">Notifications</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- User menu -->
+    <div class="justify-self-end">
+      <button
+        #UserMenuButton
+        type="button"
+        id="userMenuButton"
+        data-dropdown-toggle="userDropdown"
+        data-dropdown-placement="bottom-end"
+        aria-label="User menu"
+        class="cursor-pointer flex items-center gap-2 rounded-full border border-gray-200 bg-white p-1 transition hover:border-mainColor/40 hover:bg-mainColor/5 lg:py-1 lg:pl-1 lg:pr-3"
+      >
+        <img
+          [src]="user()?.photo ? user()?.photo : '/default-profile.png'"
+          alt="user"
+          class="h-8 w-8 rounded-full object-cover ring-2 ring-mainColor/20"
+        />
+        <span class="hidden whitespace-nowrap text-sm font-semibold text-slate-800 lg:inline">{{
+          user()?.name
+        }}</span>
+        <i class="fa-solid fa-chevron-down hidden text-[10px] text-slate-500 lg:inline"></i>
+      </button>
+
+      <!-- Dropdown -->
+      <div
+        id="userDropdown"
+        class="z-50 hidden w-56 divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white shadow-lg"
+      >
+        <!-- User info -->
+        <div class="flex items-center gap-3 px-4 py-3">
+          <img
+            [src]="user()?.photo ? user()?.photo : '/default-profile.png'"
+            alt="user"
+            class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-mainColor/20"
+          />
+          <div class="min-w-0">
+            <p class="truncate text-sm font-bold text-slate-900">{{ localUser()?.name }}</p>
+            <p class="truncate font-mono text-[11px] text-slate-500">
+              @{{ localUser()?.username }}
+            </p>
+          </div>
+        </div>
+
+        <ul class="p-1.5 text-sm font-semibold text-slate-700">
+          <li>
+            <a
+              (click)="UserMenuButton.click()"
+              routerLink="my-profile"
+              class="flex items-center gap-3 rounded-xl px-3 py-2 transition hover:bg-mainColor/5 hover:text-mainColor"
+            >
+              <i class="fa-regular fa-user w-4 text-center text-slate-500"></i> Profile
+            </a>
+          </li>
+          <li>
+            <a
+              (click)="UserMenuButton.click()"
+              routerLink="/change-password"
+              class="flex items-center gap-3 rounded-xl px-3 py-2 transition hover:bg-mainColor/5 hover:text-mainColor"
+            >
+              <i class="fa-solid fa-gear w-4 text-center text-slate-500"></i> Settings
+            </a>
+          </li>
+        </ul>
+
+        <div class="p-1.5">
+          <button
+            (click)="logOut()"
+            type="button"
+            class="cursor-pointer flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+          >
+            <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accent line -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-mainColor/40 to-transparent"
+  ></div>
+</nav>

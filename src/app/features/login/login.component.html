@@ -1,0 +1,112 @@
+<h2 class="mt-6 text-2xl font-bold text-slate-900">Log in to Synapse</h2>
+<p class="mt-1 text-xs text-slate-500">Log in and continue your social journey.</p>
+
+<form (ngSubmit)="sendLoginData()" [formGroup]="loginForm" class="mt-5 space-y-3">
+  <div class="relative">
+    <i
+      class="fa-regular fa-user pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <input
+      [class]="{
+        'border-green-700': loginForm.get('username')?.valid,
+        'border-red-700': loginForm.get('username')?.invalid && loginForm.get('username')?.touched,
+      }"
+      formControlName="login"
+      type="text"
+      id="login"
+      name="login"
+      placeholder="Email or username"
+      class="h-11.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    />
+  </div>
+
+  @if (loginForm.get('login')?.invalid && loginForm.get('login')?.touched) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          @if (loginForm.get('login')?.hasError('required')) {
+            <li>User Name or Email is required.</li>
+          }
+          @if (loginForm.get('login')?.hasError('minlength')) {
+            <li>Name must be at least 3 characters.</li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+
+  <div class="relative">
+    <i
+      class="fa-solid fa-key pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <input
+      [class]="{
+        'border-green-700': loginForm.get('password')?.valid,
+        'border-red-700': loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
+      }"
+      [type]="showPass() ? 'text' : 'password'"
+      formControlName="password"
+      type="password"
+      id="password"
+      name="password"
+      placeholder="Password"
+      class="h-11.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    />
+    <button
+      type="button"
+      (click)="showPass.set(!showPass())"
+      [attr.aria-label]="showPass() ? 'Hide password' : 'Show password'"
+      class="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-slate-400 transition hover:bg-mainColor/10 hover:text-mainColor focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    >
+      <i [class]="showPass() ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
+    </button>
+  </div>
+
+  @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          @if (loginForm.get('password')?.hasError('required')) {
+            <li>Password is required.</li>
+          }
+          @if (loginForm.get('password')?.hasError('pattern')) {
+            <li>
+              Must contain at least 8 chars, 1 uppercase, 1 lowercase, 1 number, and 1 special.
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+
+  <button
+    type="submit"
+    class="h-12 w-full cursor-pointer rounded-xl bg-mainColor text-sm font-bold text-white transition hover:bg-mainColor/90 focus:outline-none focus:ring-4 focus:ring-mainColor/30 disabled:bg-gray-700"
+  >
+    Log In
+  </button>
+
+  <a href="#" class="block pt-1 text-center text-sm text-mainColor hover:underline"
+    >Forgot password?</a
+  >
+
+  @if (msgText()) {
+    <div
+      class="flex items-center gap-3 px-4 py-3 text-sm text-red-700 bg-red-50/80 border border-red-200/80 rounded-xl shadow-xs"
+      role="alert"
+    >
+      <i class="fa-solid fa-triangle-exclamation text-red-500 text-lg flex-shrink-0"></i>
+      <p class="font-medium flex-1" id="errorMessage">incorrect email or password</p>
+    </div>
+  }
+</form>

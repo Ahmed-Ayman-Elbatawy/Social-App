@@ -1,0 +1,120 @@
+<aside
+  class="rounded-3xl border border-gray-200 bg-white p-4 lg:max-h-[calc(100dvh-90px)] lg:overflow-y-auto"
+>
+  <!-- Title -->
+  <div class="flex items-center justify-between">
+    <h2 class="flex items-center gap-2.5 font-bold text-slate-900">
+      <span
+        class="flex h-8 w-8 items-center justify-center rounded-xl bg-mainColor/10 text-sm text-mainColor"
+      >
+        <i class="fa-solid fa-user-group"></i>
+      </span>
+      Suggested Friends
+    </h2>
+    <span
+      class="flex h-6 min-w-6 items-center justify-center rounded-full bg-accent/10 px-2 font-mono text-xs font-bold text-accent"
+      >{{ friends().length }}</span
+    >
+  </div>
+
+  <!-- Search -->
+  <div class="relative mt-4">
+    <i
+      class="fa-solid fa-magnifying-glass pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400"
+    ></i>
+    <input
+      (input)="searchUser($event)"
+      type="text"
+      placeholder="Search friends by user name..."
+      class="w-full rounded-2xl border border-gray-200 bg-secondaryColor/60 py-2.5 pl-10 pr-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:ring-2 focus:ring-mainColor/20"
+    />
+  </div>
+
+  <!-- List -->
+  <div class="mt-4 space-y-3">
+    @if (friends().length === 0) {
+      <div
+        class="mt-4 flex flex-col items-center rounded-2xl border border-dashed border-gray-300 px-4 py-8 text-center"
+      >
+        <span
+          class="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-mainColor/10 text-xl text-mainColor"
+        >
+          <i class="fa-solid fa-user-plus"></i>
+          <span class="absolute -right-1 -top-1 flex h-3 w-3">
+            <span
+              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60"
+            ></span>
+            <span
+              class="relative inline-flex h-3 w-3 rounded-full bg-accent ring-2 ring-white"
+            ></span>
+          </span>
+        </span>
+
+        <h3 class="mt-4 text-sm font-bold text-slate-900">No suggestions right now</h3>
+        <p class="mt-1 max-w-[220px] text-xs leading-relaxed text-slate-500">
+          You're all caught up. New people you may know will appear here.
+        </p>
+
+        <!-- Signal line -->
+        <svg
+          viewBox="0 0 120 16"
+          class="mt-4 h-4 w-24 text-accent/70"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <circle cx="6" cy="8" r="3.5" fill="currentColor" stroke="none" />
+          <path d="M14 8h92" stroke-dasharray="2 7" />
+          <circle cx="114" cy="8" r="3" />
+        </svg>
+      </div>
+    }
+    <!-- Friend card (كرره لكل صديق) -->
+    @if (friends().length > 0) {
+      @for (friend of friends(); track friend._id) {
+        <div
+          [routerLink]="['/user-profile', friend.username]"
+          class="cursor-pointer rounded-2xl border border-gray-200 p-3 transition hover:border-mainColor/30 hover:bg-mainColor/5"
+        >
+          <div class="flex items-center gap-3">
+            <img
+              [src]="friend.photo"
+              [alt]="friend.name"
+              class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-mainColor/20"
+            />
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-bold text-slate-900">{{ friend.name }}</p>
+              <p class="truncate font-mono text-[11px] text-slate-500">@{{ friend.username }}</p>
+            </div>
+            <button
+              (click)="followUser(friend._id)"
+              type="button"
+              class="cursor-pointer flex shrink-0 items-center gap-1.5 rounded-full bg-mainColor/10 px-3 py-1.5 text-xs font-bold text-mainColor transition hover:bg-mainColor hover:text-white"
+            >
+              <i class="fa-solid fa-user-plus"></i>
+              <span>Follow</span>
+            </button>
+          </div>
+          <span
+            class="mt-2 inline-flex items-center gap-1 rounded-full bg-secondaryColor px-2.5 py-0.5 text-[11px] font-semibold text-slate-500"
+          >
+            <span class="font-mono font-bold text-slate-700">{{ friend.followersCount }}</span>
+            followers
+          </span>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- View more -->
+  <button
+    (click)="changeLimit()"
+    type="button"
+    class="cursor-pointer mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 py-2.5 text-sm font-bold text-slate-700 transition hover:border-mainColor/30 hover:bg-mainColor/5 hover:text-mainColor"
+  >
+    <span>View more</span>
+    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+  </button>
+</aside>

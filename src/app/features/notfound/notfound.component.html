@@ -1,0 +1,87 @@
+<section
+  class="relative isolate flex min-h-dvh w-full items-center justify-center overflow-hidden bg-linear-to-br from-secondaryColor via-white to-mainColor/5 px-4 py-10 sm:px-6"
+>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -left-24 -top-24 -z-10 h-80 w-80 rounded-full bg-mainColor/10 blur-3xl"
+  ></div>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -bottom-24 -right-24 -z-10 h-80 w-80 rounded-full bg-accent/10 blur-3xl"
+  ></div>
+
+  <div class="w-full max-w-xl text-center">
+    <a routerLink="/timeline" class="inline-flex items-center gap-2.5">
+      <span
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-mainColor to-mainDark text-white shadow-md shadow-mainColor/25"
+      >
+        <svg
+          viewBox="2 2 20 20"
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 2.5l8.2 4.75v8.5L12 20.5l-3-1.7L4.2 21.6l1-4.6-1.4-1.25v-8.5z" />
+          <path d="M7.6 11.6h2l1.3-2.8 2 5.6 1.3-2.8h2.2" class="stroke-accent" />
+        </svg>
+      </span>
+      <span class="text-xl font-extrabold tracking-tight text-mainColor">Synapse</span>
+    </a>
+
+    <h1
+      class="mt-10 bg-linear-to-br from-mainColor to-mainDark bg-clip-text text-8xl font-extrabold leading-none tracking-tight text-transparent sm:text-9xl"
+    >
+      404
+    </h1>
+
+    <svg
+      viewBox="0 0 320 40"
+      class="mx-auto mt-4 h-8 w-64 text-accent sm:w-80"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="10" cy="20" r="6" fill="currentColor" stroke="none" />
+      <path d="M16 20h60l10-14 14 28 10-14h30" />
+      <path d="M150 20h110" stroke-dasharray="2 9" />
+      <circle cx="310" cy="20" r="5" stroke-width="2.5" />
+    </svg>
+
+    <p class="mt-6 text-2xl font-bold text-slate-900 sm:text-3xl">Signal lost.</p>
+    <p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-600 sm:text-base">
+      The page you're looking for doesn't exist or has moved. Let's get you back to where the
+      connections happen.
+    </p>
+
+    <div
+      class="mt-5 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3.5 py-1.5 font-mono text-xs text-slate-600"
+    >
+      <span class="h-2 w-2 rounded-full bg-accent"></span>
+      error 404 · page_not_found
+    </div>
+
+    <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <a
+        routerLink="/timeline"
+        class="flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-mainColor to-mainDark px-6 py-3 text-sm font-bold text-white shadow-lg shadow-mainColor/20 transition hover:opacity-90 sm:w-auto"
+      >
+        <i class="fa-regular fa-house"></i>
+        <span>Back to feed</span>
+      </a>
+      <a
+        routerLink="/my-profile"
+        class="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-mainColor/40 hover:bg-mainColor/5 hover:text-mainColor sm:w-auto"
+      >
+        <i class="fa-regular fa-user"></i>
+        <span>Go to profile</span>
+      </a>
+    </div>
+  </div>
+</section>

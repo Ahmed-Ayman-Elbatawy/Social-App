@@ -1,0 +1,1032 @@
+<div class="rounded-2xl bg-white shadow-sm">
+  <!-- ================= Header ================= -->
+  <header
+    class="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3.5 sm:px-5"
+  >
+    <div class="flex items-center gap-3">
+      <h3 class="text-base font-bold text-slate-900">Comments</h3>
+      <span
+        class="flex h-6 min-w-6 items-center justify-center rounded-full bg-mainColor/10 px-2 text-xs font-bold text-mainColor"
+        >{{ localCommentCount() }}</span
+      >
+    </div>
+
+    <!-- Sort dropdown -->
+    <div>
+      <button
+        #sortBtn
+        type="button"
+        id="sortBtn"
+        data-dropdown-toggle="sortMenu"
+        data-dropdown-placement="bottom-end"
+        class="cursor-pointer flex items-center gap-2 rounded-xl border border-gray-200 bg-secondaryColor/60 px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-secondaryColor"
+      >
+        @switch (currentSort()) {
+          @case ('relevant') {
+            <i class="fa-solid fa-arrow-down-wide-short text-xs text-slate-500"></i>
+            <span class="hidden sm:inline">Most relevant</span>
+          }
+          @case ('newest') {
+            <i class="fa-regular fa-clock w-4 text-center text-slate-500"></i>
+            <span class="flex-1">Newest</span>
+          }
+          @case ('oldest') {
+            <i class="fa-solid fa-clock-rotate-left w-4 text-center text-slate-500"></i>
+            <span class="flex-1">Oldest</span>
+          }
+          @default {
+            <i class="fa-solid fa-arrow-down-wide-short text-xs text-slate-500"></i>
+            <span class="hidden sm:inline">Most relevant</span>
+          }
+        }
+        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+      </button>
+
+      <div
+        id="sortMenu"
+        class="z-50 hidden w-48 rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg"
+      >
+        <ul class="text-sm font-semibold text-slate-700">
+          <li>
+            <button
+              (click)="changeSort('relevant'); sortBtn.click()"
+              type="button"
+              class="cursor-pointer flex w-full items-center gap-3 rounded-lg bg-secondaryColor px-3 py-2 text-left transition hover:bg-secondaryColor"
+            >
+              <i class="fa-solid fa-fire w-4 text-center text-slate-500"></i>
+              <span class="flex-1">Most relevant</span>
+              <i class="fa-solid fa-check text-xs text-mainColor"></i>
+            </button>
+          </li>
+          <li>
+            <button
+              (click)="changeSort('newest'); sortBtn.click()"
+              type="button"
+              class="cursor-pointer flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-secondaryColor"
+            >
+              <i class="fa-regular fa-clock w-4 text-center text-slate-500"></i>
+              <span class="flex-1">Newest</span>
+            </button>
+          </li>
+          <li>
+            <button
+              (click)="changeSort('oldest'); sortBtn.click()"
+              type="button"
+              class="cursor-pointer flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-secondaryColor"
+            >
+              <i class="fa-solid fa-clock-rotate-left w-4 text-center text-slate-500"></i>
+              <span class="flex-1">Oldest</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  @if (allComments().length === 0) {
+    <!-- No comments -->
+    <div class="flex flex-col items-center px-6 py-8 text-center">
+      <span
+        class="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-mainColor/10 text-xl text-mainColor"
+      >
+        <i class="fa-regular fa-comments"></i>
+        <span class="absolute -right-1 -top-1 flex h-3 w-3">
+          <span
+            class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60"
+          ></span>
+          <span
+            class="relative inline-flex h-3 w-3 rounded-full bg-accent ring-2 ring-white"
+          ></span>
+        </span>
+      </span>
+
+      <h3 class="mt-4 text-base font-bold text-slate-900">No comments yet</h3>
+      <p class="mt-1 max-w-xs text-sm leading-relaxed text-slate-500">
+        Be the first to start the conversation.
+      </p>
+
+      <!-- Signal line: إشارة لسه ما وصلتش -->
+      <svg
+        viewBox="0 0 120 16"
+        class="mt-4 h-4 w-28 text-accent/70"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <circle cx="6" cy="8" r="3.5" fill="currentColor" stroke="none" />
+        <path d="M14 8h92" stroke-dasharray="2 7" />
+        <circle cx="114" cy="8" r="3" />
+      </svg>
+
+      <p class="mt-3 inline-flex items-center gap-2 font-mono text-[11px] text-slate-500">
+        <i class="fa-solid fa-arrow-down text-[10px] text-mainColor"></i>
+        write the first comment below
+      </p>
+    </div>
+  }
+
+  @if (allComments().length > 0) {
+    <div class="space-y-5 px-4 py-5 sm:px-5">
+      @for (comment of allComments(); track comment._id) {
+        <article class="flex gap-3">
+          <img
+            [src]="comment.commentCreator.photo"
+            [alt]="comment.commentCreator.name"
+            class="h-9 w-9 shrink-0 rounded-full bg-secondaryColor object-cover ring-2 ring-mainColor/10"
+          />
+
+          <div class="min-w-0 flex-1">
+            @if (comment.isEditing) {
+              <!-- ============ EDIT MODE ============ -->
+              <form
+                (submit)="updateComment($event, postId(), comment._id)"
+                class="rounded-2xl border border-mainColor/40 bg-white p-3 ring-4 ring-mainColor/10"
+              >
+                <!-- Header -->
+                <div class="flex items-center justify-between gap-2">
+                  <p
+                    class="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-mainColor"
+                  >
+                    <span class="relative flex h-1.5 w-1.5">
+                      <span
+                        class="absolute inline-flex h-full w-full animate-ping rounded-full bg-mainColor opacity-60"
+                      ></span>
+                      <span
+                        class="relative inline-flex h-1.5 w-1.5 rounded-full bg-mainColor"
+                      ></span>
+                    </span>
+                    Editing comment
+                  </p>
+                  <span class="font-mono text-[10px] text-slate-400"
+                    >@{{ comment.commentCreator.username }}</span
+                  >
+                </div>
+
+                <!-- Text -->
+                <textarea
+                  [formControl]="editingContent"
+                  rows="2"
+                  placeholder="Edit your comment..."
+                  class="mt-2 w-full resize-none rounded-xl border border-gray-200 bg-secondaryColor/60 p-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:ring-2 focus:ring-mainColor/20"
+                ></textarea>
+
+                <!-- ===== Images area ===== -->
+                <div class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <!-- Current image (القديمة) -->
+                  <div>
+                    <p
+                      class="mb-1 flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500"
+                    >
+                      <i class="fa-regular fa-image text-[9px]"></i>
+                      Current image
+                    </p>
+
+                    @if (comment.image && !removeCurrentImage()) {
+                      <div class="relative overflow-hidden rounded-xl bg-secondaryColor">
+                        <img
+                          [src]="comment.image"
+                          alt="Current image"
+                          class="h-32 w-full object-cover"
+                        />
+                        <button
+                          (click)="removeCurrentImage.set(true)"
+                          type="button"
+                          aria-label="Remove current image"
+                          class="absolute right-1.5 top-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/60 text-[11px] text-white backdrop-blur-sm transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-white/60"
+                        >
+                          <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                      </div>
+                    } @else {
+                      <div
+                        class="flex h-32 items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white text-xs font-medium text-slate-400"
+                      >
+                        No image
+                      </div>
+                    }
+                  </div>
+
+                  <!-- New image (الـ preview) -->
+                  <div>
+                    <p
+                      class="mb-1 flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-mainColor"
+                    >
+                      <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i>
+                      New image
+                    </p>
+
+                    <!-- (1) اتختارت صورة جديدة -->
+                    @if (editingImgSrc()) {
+                      <div
+                        class="relative overflow-hidden rounded-xl bg-secondaryColor ring-2 ring-mainColor/40"
+                      >
+                        <img
+                          [src]="editingImgSrc()"
+                          alt="New image preview"
+                          class="h-32 w-full object-cover"
+                        />
+
+                        <span
+                          class="absolute left-1.5 top-1.5 rounded-full bg-mainColor px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-white"
+                        >
+                          Preview
+                        </span>
+                        <button
+                          (click)="editingImgSrc.set(''); editingFile.set(null)"
+                          type="button"
+                          aria-label="Discard new image"
+                          class="absolute right-1.5 top-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/60 text-[11px] text-white backdrop-blur-sm transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-white/60"
+                        >
+                          <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </div>
+                    }
+
+                    <!-- (2) لسه ما اختارش صورة جديدة (اعرض (1) أو (2) مش الاتنين) -->
+                    <label
+                      class="flex h-32 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-gray-300 bg-white text-xs font-semibold text-slate-500 transition focus-within:ring-2 focus-within:ring-mainColor/20 hover:border-mainColor/40 hover:text-mainColor"
+                    >
+                      <i class="fa-solid fa-camera text-base text-mainColor"></i>
+                      <span>Replace image</span>
+                      <input
+                        (change)="changeFile($event, true, false)"
+                        type="file"
+                        accept="image/*"
+                        class="sr-only"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Footer -->
+                <div
+                  class="mt-3 flex items-center justify-between gap-2 border-t border-gray-100 pt-3"
+                >
+                  <button
+                    type="button"
+                    [attr.id]="'editCommEmojiBtn-' + comment._id"
+                    [attr.data-dropdown-toggle]="'editCommEmojiMnu-' + comment._id"
+                    data-dropdown-placement="top-start"
+                    aria-label="Add emoji"
+                    class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-white hover:text-accent"
+                  >
+                    <i class="fa-regular fa-face-smile text-sm"></i>
+                  </button>
+
+                  <div
+                    [attr.id]="'editCommEmojiMnu-' + comment._id"
+                    class="z-50 hidden w-72 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg"
+                  >
+                    <p
+                      class="px-2 pb-1.5 pt-1 font-mono text-[11px] font-bold uppercase tracking-widest text-slate-500"
+                    >
+                      Pick an emoji
+                    </p>
+                    <div class="grid max-h-56 grid-cols-8 gap-0.5 overflow-y-auto">
+                      @for (emoji of emojis; track emoji) {
+                        <button
+                          type="button"
+                          (click)="addEmoji(emoji, true, false)"
+                          class="cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg text-xl transition hover:bg-mainColor/10"
+                        >
+                          {{ emoji }}
+                        </button>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <button
+                      (click)="closeEditComment(comment)"
+                      type="button"
+                      class="cursor-pointer rounded-xl border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 transition hover:border-mainColor/40 hover:bg-mainColor/5 hover:text-mainColor"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      class="flex cursor-pointer items-center gap-1.5 rounded-xl bg-linear-to-r from-mainColor to-mainDark px-4 py-1.5 text-xs font-bold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <i class="fa-solid fa-check text-[10px]"></i>
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </form>
+            } @else {
+              <!-- ============ VIEW MODE ============ -->
+              <div class="flex items-start gap-1">
+                <!-- Bubble -->
+                <div
+                  class="relative min-w-0 max-w-full rounded-2xl rounded-tl-md bg-secondaryColor px-4 py-2.5"
+                  [class.mb-3]="comment.likes?.length"
+                >
+                  <div class="flex flex-wrap items-baseline gap-x-2">
+                    <p class="text-sm font-bold text-slate-900">
+                      {{ comment.commentCreator.name }}
+                    </p>
+                    <p class="font-mono text-[11px] text-slate-500">
+                      @{{ comment.commentCreator.username }}
+                    </p>
+                  </div>
+
+                  @if (comment.content) {
+                    <p class="mt-0.5 whitespace-pre-line break-words text-sm text-slate-700">
+                      {{ comment.content }}
+                    </p>
+                  }
+
+                  @if (comment.image) {
+                    <img
+                      [src]="comment.image"
+                      alt="Comment image"
+                      loading="lazy"
+                      class="mt-2 max-h-60 w-full rounded-xl object-cover"
+                    />
+                  }
+
+                  <!-- Like pill: بتظهر لما فيه likes وتختفي لما يبقى صفر -->
+                  @if (comment.likes?.length) {
+                    <span
+                      class="absolute -bottom-2.5 right-3 flex items-center gap-1 rounded-full bg-white px-1.5 py-0.5 text-[11px] font-bold text-slate-600 shadow ring-1 ring-gray-100"
+                    >
+                      <span
+                        class="flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[8px] text-white"
+                      >
+                        <i class="fa-solid fa-heart"></i>
+                      </span>
+                      <span class="font-mono">{{ comment.likes.length }}</span>
+                    </span>
+                  }
+                </div>
+
+                <!-- Options (لصاحب التعليق بس) -->
+                @if (comment.commentCreator._id === user()._id) {
+                  <div class="relative shrink-0">
+                    <button
+                      #cmtBtn
+                      type="button"
+                      aria-label="Comment options"
+                      [attr.id]="'commentBtn-' + comment._id"
+                      [attr.data-dropdown-toggle]="'commentMenu-' + comment._id"
+                      data-dropdown-placement="bottom-end"
+                      class="mt-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-slate-400 transition hover:bg-mainColor/10 hover:text-mainColor focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+                    >
+                      <i class="fa-solid fa-ellipsis text-xs"></i>
+                    </button>
+
+                    <div
+                      [attr.id]="'commentMenu-' + comment._id"
+                      class="z-50 hidden w-44 rounded-2xl border border-gray-200 bg-white p-1.5 shadow-lg"
+                    >
+                      <ul class="text-sm font-semibold text-slate-700">
+                        <li>
+                          <button
+                            type="button"
+                            (click)="cmtBtn.click(); openEditComment(comment)"
+                            class="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition hover:bg-mainColor/5"
+                          >
+                            <i
+                              class="fa-regular fa-pen-to-square w-4 text-center text-slate-500"
+                            ></i>
+                            <span>Edit comment</span>
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            type="button"
+                            (click)="cmtBtn.click(); deleteComment(postId(), comment._id)"
+                            class="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left text-red-600 transition hover:bg-red-50"
+                          >
+                            <i class="fa-regular fa-trash-can w-4 text-center"></i>
+                            <span>Delete comment</span>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <!-- Actions -->
+              <div class="mt-1.5 flex items-center gap-4 px-2 text-xs font-semibold text-slate-500">
+                <span class="font-mono text-[11px] font-normal">{{
+                  comment.createdAt | date: 'MMM d, h:mm a'
+                }}</span>
+
+                <!-- Like toggle -->
+                <button
+                  (click)="CommentLike(comment, postId(), comment._id)"
+                  type="button"
+                  [attr.aria-pressed]="comment.likes?.includes(user()._id)"
+                  [class]="
+                    comment.likes?.includes(user()._id) ? 'text-accent' : 'hover:text-accent'
+                  "
+                  class="flex cursor-pointer items-center gap-1.5 transition active:scale-95"
+                >
+                  <i
+                    [class]="
+                      comment.likes?.includes(user()._id)
+                        ? 'fa-solid fa-heart'
+                        : 'fa-regular fa-heart'
+                    "
+                  ></i>
+                  <span>{{ comment.likes?.includes(user()._id) ? 'Liked' : 'Like' }}</span>
+                </button>
+
+                <button
+                  (click)="toggleReplies(comment)"
+                  type="button"
+                  [class]="comment.showReplies ? 'text-mainColor' : 'hover:text-mainColor'"
+                  class="flex cursor-pointer items-center gap-1.5 transition"
+                >
+                  <i class="fa-solid fa-reply text-[10px]"></i>
+                  <span>{{ comment.showReplies ? 'Hide replies' : 'Reply' }}</span>
+                  <span
+                    class="rounded-full bg-secondaryColor px-1.5 py-0.5 font-mono text-[10px] font-bold"
+                  >
+                    {{ comment.repliesCount }}
+                  </span>
+                </button>
+              </div>
+            }
+
+            <!-- ============ REPLIES SECTION ============ -->
+            @if (comment.showReplies) {
+              <div class="mt-3 border-l-2 border-mainColor/20 pl-4">
+                <!-- لو مفيش ردود -->
+                @if (comment.repliesCount === 0) {
+                  <div
+                    class="flex items-center gap-2.5 rounded-2xl bg-secondaryColor/60 px-3.5 py-3"
+                  >
+                    <span
+                      class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-mainColor/10 text-sm text-mainColor"
+                    >
+                      <i class="fa-regular fa-comment-dots"></i>
+                    </span>
+                    <div class="min-w-0">
+                      <p class="text-sm font-bold text-slate-900">No replies yet</p>
+                      <p class="text-xs text-slate-500">Be the first to reply.</p>
+                    </div>
+                  </div>
+                }
+
+                <!-- لو فيه ردود: حط كود الرد بتاعك هنا -->
+                @if (comment.repliesCount > 0) {
+                  <div class="space-y-3">
+                    @for (reply of comment.replies; track reply._id) {
+                      <div class="flex gap-2.5">
+                        <img
+                          [src]="reply.commentCreator.photo"
+                          [alt]="reply.commentCreator.name"
+                          class="h-7 w-7 shrink-0 rounded-full bg-secondaryColor object-cover"
+                        />
+
+                        <div class="min-w-0 flex-1">
+                          @if (reply.isEditing) {
+                            <!-- Reply EDIT MODE -->
+                            <form
+                              (submit)="updateReply($event, postId(), comment._id, reply._id)"
+                              class="rounded-2xl border border-mainColor/40 bg-white p-2.5 ring-4 ring-mainColor/10"
+                            >
+                              <p
+                                class="font-mono text-[10px] font-bold uppercase tracking-widest text-mainColor"
+                              >
+                                Editing reply
+                              </p>
+                              <textarea
+                                [formControl]="editingReplyContent"
+                                rows="1"
+                                placeholder="Edit your reply..."
+                                class="mt-1.5 w-full resize-none rounded-xl border border-gray-200 bg-secondaryColor/60 p-2.5 text-[13px] text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:ring-2 focus:ring-mainColor/20"
+                              ></textarea>
+                              <!-- ===== Images area ===== -->
+                              <div class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <!-- Current image (القديمة) -->
+                                <div>
+                                  <p
+                                    class="mb-1 flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500"
+                                  >
+                                    <i class="fa-regular fa-image text-[9px]"></i>
+                                    Current image
+                                  </p>
+
+                                  @if (reply.image && !removeCurrentReplyImg()) {
+                                    <div
+                                      class="relative overflow-hidden rounded-xl bg-secondaryColor"
+                                    >
+                                      <img
+                                        [src]="reply.image"
+                                        alt="Current image"
+                                        class="h-32 w-full object-cover"
+                                      />
+                                      <button
+                                        (click)="removeCurrentReplyImg.set(true)"
+                                        type="button"
+                                        aria-label="Remove current image"
+                                        class="absolute right-1.5 top-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/60 text-[11px] text-white backdrop-blur-sm transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-white/60"
+                                      >
+                                        <i class="fa-regular fa-trash-can"></i>
+                                      </button>
+                                    </div>
+                                  } @else {
+                                    <div
+                                      class="flex h-32 items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white text-xs font-medium text-slate-400"
+                                    >
+                                      No image
+                                    </div>
+                                  }
+                                </div>
+
+                                <!-- New image (الـ preview) -->
+
+                                <div>
+                                  <p
+                                    class="mb-1 flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-mainColor"
+                                  >
+                                    <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i>
+                                    New image
+                                  </p>
+
+                                  @if (editingReplySrc()) {
+                                    <!-- (1) اتختارت صورة جديدة -->
+                                    <div
+                                      class="relative overflow-hidden rounded-xl bg-secondaryColor ring-2 ring-mainColor/40"
+                                    >
+                                      <!-- Placeholder: بدله بالـ img اللي تحته -->
+
+                                      <img
+                                        [src]="editingReplySrc()"
+                                        alt="New image preview"
+                                        class="h-32 w-full object-cover"
+                                      />
+
+                                      <span
+                                        class="absolute left-1.5 top-1.5 rounded-full bg-mainColor px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-white"
+                                      >
+                                        Preview
+                                      </span>
+                                      <button
+                                        (click)="
+                                          editingReplySrc.set(''); editingReplyFile.set(null)
+                                        "
+                                        type="button"
+                                        aria-label="Discard new image"
+                                        class="absolute right-1.5 top-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/60 text-[11px] text-white backdrop-blur-sm transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-white/60"
+                                      >
+                                        <i class="fa-solid fa-xmark"></i>
+                                      </button>
+                                    </div>
+                                  }
+
+                                  <!-- (2) لسه ما اختارش صورة جديدة (اعرض (1) أو (2) مش الاتنين) -->
+                                  <label
+                                    class="flex h-32 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-gray-300 bg-white text-xs font-semibold text-slate-500 transition focus-within:ring-2 focus-within:ring-mainColor/20 hover:border-mainColor/40 hover:text-mainColor"
+                                  >
+                                    <i class="fa-solid fa-camera text-base text-mainColor"></i>
+                                    <span>Replace image</span>
+                                    <!-- لو مفيش صورة قديمة خليها: Add a photo -->
+                                    <input
+                                      (change)="changeFile($event, true, true)"
+                                      type="file"
+                                      accept="image/*"
+                                      class="sr-only"
+                                    />
+                                  </label>
+                                </div>
+                                <button
+                                  type="button"
+                                  [attr.id]="'editReplyEmojiBtn-' + reply._id"
+                                  [attr.data-dropdown-toggle]="'editReplyEmojiMnu-' + reply._id"
+                                  data-dropdown-placement="top-start"
+                                  aria-label="Add emoji"
+                                  class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-white hover:text-accent"
+                                >
+                                  <i class="fa-regular fa-face-smile text-sm"></i>
+                                </button>
+
+                                <div
+                                  [attr.id]="'editReplyEmojiMnu-' + reply._id"
+                                  class="z-50 hidden w-72 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg"
+                                >
+                                  <p
+                                    class="px-2 pb-1.5 pt-1 font-mono text-[11px] font-bold uppercase tracking-widest text-slate-500"
+                                  >
+                                    Pick an emoji
+                                  </p>
+                                  <div class="grid max-h-56 grid-cols-8 gap-0.5 overflow-y-auto">
+                                    @for (emoji of emojis; track emoji) {
+                                      <button
+                                        type="button"
+                                        (click)="addEmoji(emoji, true, true)"
+                                        class="cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg text-xl transition hover:bg-mainColor/10"
+                                      >
+                                        {{ emoji }}
+                                      </button>
+                                    }
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- لو المستخدم شال الصورة الحالية (اختياري) -->
+
+                              <div class="mt-2 flex items-center justify-end gap-2">
+                                <button
+                                  type="button"
+                                  (click)="
+                                    reply.isEditing = false; removeCurrentReplyImg.set(false)
+                                  "
+                                  class="cursor-pointer rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:border-mainColor/40 hover:text-mainColor"
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  type="submit"
+                                  class="flex cursor-pointer items-center gap-1.5 rounded-xl bg-linear-to-r from-mainColor to-mainDark px-3.5 py-1.5 text-xs font-bold text-white shadow-sm transition hover:opacity-90"
+                                >
+                                  <i class="fa-solid fa-check text-[10px]"></i>
+                                  Save
+                                </button>
+                              </div>
+                            </form>
+                          } @else {
+                            <div class="flex items-start gap-1">
+                              <div
+                                class="relative min-w-0 max-w-full rounded-2xl rounded-tl-md bg-secondaryColor px-3.5 py-2"
+                                [class.mb-3]="reply.likes?.length"
+                              >
+                                <div class="flex flex-wrap items-baseline gap-x-2">
+                                  <p class="text-[13px] font-bold text-slate-900">
+                                    {{ reply.commentCreator.name }}
+                                  </p>
+                                  <p class="font-mono text-[11px] text-slate-500">
+                                    @{{ reply.commentCreator.username }}
+                                  </p>
+                                </div>
+                                <p
+                                  class="mt-0.5 whitespace-pre-line break-words text-[13px] text-slate-700"
+                                >
+                                  {{ reply.content }}
+                                </p>
+                                @if (reply.image) {
+                                  <img
+                                    [src]="reply.image"
+                                    alt="Reply image"
+                                    loading="lazy"
+                                    class="mt-2 max-h-48 w-full max-w-xs rounded-xl object-cover"
+                                  />
+                                }
+                                @if (reply.likes?.length) {
+                                  <span
+                                    class="absolute -bottom-2.5 right-3 flex items-center gap-1 rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold text-slate-600 shadow ring-1 ring-gray-100"
+                                  >
+                                    <span
+                                      class="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-accent text-[7px] text-white"
+                                    >
+                                      <i class="fa-solid fa-heart"></i>
+                                    </span>
+                                    <span class="font-mono">{{ reply.likes.length }}</span>
+                                  </span>
+                                }
+                              </div>
+
+                              @if (reply.commentCreator._id === user()._id) {
+                                <div class="relative shrink-0">
+                                  <div class="relative shrink-0">
+                                    <!-- زر النقاط الثلاث -->
+                                    <button
+                                      type="button"
+                                      (click)="reply.showMenu = !reply.showMenu"
+                                      class="mt-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-slate-400 transition hover:bg-mainColor/10 hover:text-mainColor"
+                                    >
+                                      <i class="fa-solid fa-ellipsis text-xs"></i>
+                                    </button>
+
+                                    <!-- القائمة تظهر وتختفي بناءً على متغير reply.showMenu -->
+                                    @if (reply.showMenu) {
+                                      <div
+                                        class="absolute right-0 top-8 z-50 w-44 rounded-2xl border border-gray-200 bg-white p-1.5 shadow-lg"
+                                      >
+                                        <ul class="text-sm font-semibold text-slate-700">
+                                          <li>
+                                            <button
+                                              type="button"
+                                              (click)="
+                                                reply.isEditing = true;
+                                                reply.showMenu = false;
+                                                openEditReply(reply)
+                                              "
+                                              class="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left transition hover:bg-mainColor/5"
+                                            >
+                                              <i
+                                                class="fa-regular fa-pen-to-square w-4 text-center text-slate-500"
+                                              ></i>
+                                              <span>Edit reply</span>
+                                            </button>
+                                          </li>
+                                          <li>
+                                            <button
+                                              (click)="deleteComment(postId(), reply._id)"
+                                              type="button"
+                                              (click)="reply.showMenu = false"
+                                              class="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-left text-red-600 transition hover:bg-red-50"
+                                            >
+                                              <i
+                                                class="fa-regular fa-trash-can w-4 text-center"
+                                              ></i>
+                                              <span>Delete reply</span>
+                                            </button>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    }
+                                  </div>
+                                </div>
+                              }
+                            </div>
+
+                            <div
+                              class="mt-1 flex items-center gap-4 px-2 text-xs font-semibold text-slate-500"
+                            >
+                              <span class="font-mono text-[11px] font-normal">{{
+                                reply.createdAt
+                              }}</span>
+                              <button
+                                (click)="likeReply(postId(), comment._id, reply._id)"
+                                type="button"
+                                [attr.aria-pressed]="reply.likes?.includes(user()._id)"
+                                [class]="
+                                  reply.likes?.includes(user()._id)
+                                    ? 'text-accent'
+                                    : 'hover:text-accent'
+                                "
+                                class="flex cursor-pointer items-center gap-1.5 transition active:scale-95"
+                              >
+                                <i
+                                  [class]="
+                                    reply.likes?.includes(user()._id)
+                                      ? 'fa-solid fa-heart'
+                                      : 'fa-regular fa-heart'
+                                  "
+                                ></i>
+                                <span>{{
+                                  reply.likes?.includes(user()._id) ? 'Liked' : 'Like'
+                                }}</span>
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- صندوق كتابة الرد -->
+                <form
+                  (submit)="createReply($event, comment._id)"
+                  class="mt-3 flex items-start gap-2.5"
+                >
+                  <img
+                    [src]="user().photo"
+                    alt="Your avatar"
+                    class="h-7 w-7 shrink-0 rounded-full bg-secondaryColor object-cover"
+                  />
+
+                  <div
+                    class="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-secondaryColor/60 p-2.5 transition focus-within:border-mainColor focus-within:bg-white focus-within:ring-2 focus-within:ring-mainColor/20"
+                  >
+                    <p class="mb-1 flex items-center gap-1.5 px-1 text-[11px] text-slate-500">
+                      <i class="fa-solid fa-reply text-[9px] text-mainColor"></i>
+                      Replying to
+                      <span class="font-mono font-bold text-mainColor"
+                        >@{{ comment.commentCreator.username }}</span
+                      >
+                    </p>
+
+                    <textarea
+                      [formControl]="replyContent"
+                      rows="1"
+                      placeholder="Write a reply..."
+                      class="w-full resize-none border-0 bg-transparent p-1 text-sm text-slate-800 shadow-none outline-none placeholder:text-slate-400 focus:ring-0"
+                    ></textarea>
+                    @if (replySrc()) {
+                      <div
+                        class="mt-1.5 flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-1.5"
+                      >
+                        <div
+                          class="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-secondaryColor"
+                        >
+                          <img
+                            [src]="replySrc()"
+                            alt="Preview"
+                            class="h-full w-full object-cover"
+                          />
+                        </div>
+
+                        <div class="min-w-0 flex-1">
+                          <p class="truncate text-xs font-bold text-slate-800">Image attached</p>
+                          <p class="text-[11px] text-slate-500">It will be sent with your reply.</p>
+                        </div>
+
+                        <button
+                          (click)="removePreview()"
+                          type="button"
+                          aria-label="Remove image"
+                          class="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+                        >
+                          <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                      </div>
+                    }
+
+                    <div class="mt-1.5 flex items-center justify-between gap-2">
+                      <div class="flex items-center gap-0.5">
+                        <label
+                          aria-label="Add image"
+                          class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition focus-within:ring-2 focus-within:ring-mainColor/20 hover:bg-white hover:text-mainColor"
+                        >
+                          <i class="fa-regular fa-image text-sm"></i>
+                          <input
+                            (change)="changeFile($event, false, true)"
+                            type="file"
+                            accept="image/*"
+                            class="sr-only"
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          [attr.id]="'replyEmojiBtn-' + comment._id"
+                          [attr.data-dropdown-toggle]="'replyEmojiMnu-' + comment._id"
+                          data-dropdown-placement="top-start"
+                          aria-label="Add emoji"
+                          class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-white hover:text-accent"
+                        >
+                          <i class="fa-regular fa-face-smile text-sm"></i>
+                        </button>
+
+                        <div
+                          [attr.id]="'replyEmojiMnu-' + comment._id"
+                          class="z-50 hidden w-72 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg"
+                        >
+                          <p
+                            class="px-2 pb-1.5 pt-1 font-mono text-[11px] font-bold uppercase tracking-widest text-slate-500"
+                          >
+                            Pick an emoji
+                          </p>
+                          <div class="grid max-h-56 grid-cols-8 gap-0.5 overflow-y-auto">
+                            @for (emoji of emojis; track emoji) {
+                              <button
+                                type="button"
+                                (click)="addEmoji(emoji, false, true)"
+                                class="cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg text-xl transition hover:bg-mainColor/10"
+                              >
+                                {{ emoji }}
+                              </button>
+                            }
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        aria-label="Send reply"
+                        class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-mainColor text-xs text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <i class="fa-solid fa-paper-plane"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+
+    <!-- ================= Show more comments ================= -->
+    @if (this.hasMoreComments()) {
+      <div class="flex items-center gap-3 px-4 pb-4 sm:px-5">
+        <div class="h-px flex-1 bg-gray-100"></div>
+
+        <button
+          (click)="loadMoreComments()"
+          type="button"
+          class="cursor-pointer flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:border-mainColor/30 hover:bg-mainColor/5 hover:text-mainColor focus:outline-none focus:ring-2 focus:ring-mainColor/20 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <i class="fa-solid fa-chevron-down text-[10px]"></i>
+          <span>Show more comments</span>
+          <span
+            class="rounded-full bg-secondaryColor px-2 py-0.5 font-mono text-[11px] text-slate-500"
+            >{{ finalCommentsCounts() }}</span
+          >
+        </button>
+
+        <div class="h-px flex-1 bg-gray-100"></div>
+      </div>
+    }
+  }
+
+  <!-- ================= Write comment ================= -->
+  <div class="border-t border-gray-100 px-4 py-4 sm:px-5">
+    <div class="flex items-start gap-3">
+      <img
+        [src]="user().photo"
+        alt="User avatar"
+        class="h-9 w-9 shrink-0 rounded-full bg-secondaryColor object-cover"
+      />
+
+      <form
+        (submit)="submitForm($event)"
+        class="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-secondaryColor/60 p-3 transition focus-within:border-mainColor focus-within:bg-white focus-within:ring-2 focus-within:ring-mainColor/20"
+      >
+        <textarea
+          [formControl]="commentContent"
+          rows="2"
+          [placeholder]="'Comment as ' + user().name + '...'"
+          class="w-full resize-none border-0 bg-transparent p-1 text-sm text-slate-800 shadow-none outline-none placeholder:text-slate-400 focus:ring-0"
+        ></textarea>
+
+        <!-- Image preview: يظهر لما تختار صورة -->
+        @if (imgSrc()) {
+          <!-- Image preview: يظهر لما تختار صورة -->
+          <div class="mt-2 flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-2">
+            <div class="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-secondaryColor">
+              <img [src]="imgSrc()" alt="Preview" class="h-full w-full object-cover" />
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-xs font-bold text-slate-800">Image attached</p>
+              <p class="text-[11px] text-slate-500">It will be sent with your comment.</p>
+            </div>
+
+            <button
+              (click)="removePreview()"
+              type="button"
+              aria-label="Remove image"
+              class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-200"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        }
+
+        <div class="mt-2 flex items-center justify-between">
+          <div class="flex items-center gap-1">
+            <!-- Image picker -->
+            <label
+              aria-label="Add image"
+              class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-slate-500 transition focus-within:ring-2 focus-within:ring-mainColor/20 hover:bg-white hover:text-emerald-600"
+            >
+              <i class="fa-regular fa-image"></i>
+              <input (change)="changeFile($event)" type="file" accept="image/*" class="sr-only" />
+            </label>
+
+            <!-- Emoji -->
+            <button
+              id="commEmojiBtnCreate"
+              data-dropdown-toggle="commEmojiMnuCreate"
+              data-dropdown-placement="top-start"
+              type="button"
+              aria-label="Add emoji"
+              class="cursor-pointer flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition hover:bg-white hover:text-amber-500"
+            >
+              <i class="fa-regular fa-face-smile"></i>
+            </button>
+            <div
+              id="commEmojiMnuCreate"
+              class="z-50 hidden w-72 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg"
+            >
+              <p
+                class="px-2 pb-1.5 pt-1 font-mono text-[11px] font-bold uppercase tracking-widest text-slate-500"
+              >
+                Pick an emoji
+              </p>
+              <div class="grid max-h-56 grid-cols-8 gap-0.5 overflow-y-auto">
+                @for (emoji of emojis; track emoji) {
+                  <button
+                    type="button"
+                    (click)="addEmoji(emoji)"
+                    class="cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg text-xl transition hover:bg-mainColor/10"
+                  >
+                    {{ emoji }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Send -->
+          <button
+            type="submit"
+            aria-label="Send comment"
+            class="cursor-pointer flex h-10 w-10 items-center justify-center rounded-full bg-mainColor text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <i class="fa-solid fa-paper-plane text-sm"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<main class="min-h-dvh bg-secondaryColor">
+  <div
+    class="mx-auto grid max-w-[1400px] grid-cols-1 gap-4 px-3 py-4 sm:px-6 lg:grid-cols-[200px_minmax(0,1fr)_280px] lg:items-start lg:gap-6 lg:px-8 xl:grid-cols-[240px_minmax(0,1fr)_320px]"
+  >
+    <app-side-left class="block lg:sticky lg:top-[74px]"></app-side-left>
+
+    <section class="min-w-0 space-y-4">
+      <router-outlet></router-outlet>
+      <p class="py-4 text-center text-xs font-medium text-slate-400">You reached the end</p>
+    </section>
+
+    <app-side-right class="block lg:sticky lg:top-[74px]"></app-side-right>
+  </div>
+</main>

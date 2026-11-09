@@ -1,0 +1,206 @@
+<section
+  class="relative isolate flex min-h-dvh w-full items-center justify-center overflow-hidden bg-linear-to-br from-secondaryColor via-white to-mainColor/5 px-4 py-8 sm:px-6 sm:py-10 lg:px-8"
+>
+  <!-- Decorative blobs -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -left-24 -top-24 -z-10 h-80 w-80 rounded-full bg-mainColor/10 blur-3xl"
+  ></div>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -bottom-24 -right-24 -z-10 h-80 w-80 rounded-full bg-accent/10 blur-3xl"
+  ></div>
+
+  <div class="container w-full max-w-6xl">
+    <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16">
+      <!-- ============ Left side: brand + about me ============ -->
+      <div
+        class="order-2 w-full max-w-xl justify-self-center text-center lg:order-1 lg:justify-self-end lg:text-left"
+      >
+        <!-- Logo -->
+        <div class="flex items-center justify-center gap-3 lg:justify-start">
+          <span
+            class="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-mainColor to-mainDark text-white shadow-lg shadow-mainColor/25"
+          >
+            <svg
+              viewBox="2 2 20 20"
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 2.5l8.2 4.75v8.5L12 20.5l-3-1.7L4.2 21.6l1-4.6-1.4-1.25v-8.5z" />
+              <path d="M7.6 11.6h2l1.3-2.8 2 5.6 1.3-2.8h2.2" class="stroke-accent" />
+            </svg>
+          </span>
+          <span class="font-mono text-xs font-bold uppercase tracking-[0.25em] text-accent">
+            Social network
+          </span>
+        </div>
+
+        <!-- Name -->
+        <h1
+          class="mt-5 text-5xl font-extrabold tracking-tight text-mainColor sm:text-6xl lg:text-7xl"
+        >
+          Synapse
+        </h1>
+
+        <!-- Signal line: عقدتين متوصلين بإشارة -->
+        <svg
+          viewBox="0 0 200 24"
+          class="mx-auto mt-2 h-6 w-40 text-accent lg:mx-0"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="8" cy="12" r="5" fill="currentColor" stroke="none" />
+          <path d="M13 12h40l8-8 10 16 8-8h108" />
+          <circle cx="192" cy="12" r="5" fill="currentColor" stroke="none" />
+        </svg>
+
+        <p class="mt-4 text-xl font-bold text-slate-800 sm:text-2xl">Where connections happen.</p>
+
+        <!-- What you can do -->
+        <div class="mt-5 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+          <span
+            class="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700"
+          >
+            <i class="fa-regular fa-pen-to-square text-mainColor"></i> Share moments
+          </span>
+          <span
+            class="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700"
+          >
+            <i class="fa-solid fa-user-plus text-mainColor"></i> Follow friends
+          </span>
+          <span
+            class="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700"
+          >
+            <i class="fa-regular fa-heart text-accent"></i> React &amp; comment
+          </span>
+        </div>
+
+        <!-- About me -->
+        <div
+          class="mt-6 rounded-3xl border border-gray-200 bg-white/80 p-4 text-left backdrop-blur sm:p-5"
+        >
+          <p class="font-mono text-[11px] font-bold uppercase tracking-widest text-accent">
+            The person behind it
+          </p>
+          <h2 class="mt-2 text-lg font-bold text-slate-900 sm:text-xl">
+            A physical therapist who writes code
+          </h2>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">
+            I help people move better, and I build interfaces that feel just as natural. Synapse is
+            where both worlds meet: a social platform made with care, clean code, and a human touch.
+          </p>
+
+          <!-- Two roles -->
+          <div class="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+            <div
+              class="flex items-center gap-3 rounded-2xl bg-mainColor/5 px-3.5 py-3 ring-1 ring-mainColor/10"
+            >
+              <span
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mainColor text-white"
+              >
+                <i class="fa-solid fa-user-doctor"></i>
+              </span>
+              <div class="min-w-0">
+                <p class="text-sm font-bold text-slate-900">Physical therapist</p>
+                <p class="truncate text-xs text-slate-500">Movement · Rehab · Recovery</p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-center gap-3 rounded-2xl bg-accent/5 px-3.5 py-3 ring-1 ring-accent/15"
+            >
+              <span
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent text-white"
+              >
+                <i class="fa-solid fa-code"></i>
+              </span>
+              <div class="min-w-0">
+                <p class="text-sm font-bold text-slate-900">Frontend developer</p>
+                <p class="truncate text-xs text-slate-500">Angular · UI · Clean code</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stack -->
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span
+              class="rounded-lg bg-secondaryColor px-2.5 py-1 font-mono text-[11px] font-medium text-slate-600"
+            >
+              <i class="fa-brands fa-angular mr-1 text-red-500"></i>Angular
+            </span>
+            <span
+              class="rounded-lg bg-secondaryColor px-2.5 py-1 font-mono text-[11px] font-medium text-slate-600"
+              >TypeScript</span
+            >
+            <span
+              class="rounded-lg bg-secondaryColor px-2.5 py-1 font-mono text-[11px] font-medium text-slate-600"
+              >Tailwind</span
+            >
+            <span
+              class="rounded-lg bg-secondaryColor px-2.5 py-1 font-mono text-[11px] font-medium text-slate-600"
+              >Flowbite</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ Right side: card with tabs + router-outlet ============ -->
+      <div class="order-1 w-full max-w-md justify-self-center lg:order-2 lg:justify-self-end">
+        <div
+          class="rounded-3xl border border-gray-200 bg-white p-5 shadow-xl shadow-mainColor/5 sm:p-6"
+        >
+          <!-- Mini brand (موبايل بس، لأن الـ branding بينزل تحت الفورم) -->
+          <div class="mb-4 flex items-center justify-center gap-2.5 lg:hidden">
+            <span
+              class="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-mainColor to-mainDark text-white"
+            >
+              <svg
+                viewBox="2 2 20 20"
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 2.5l8.2 4.75v8.5L12 20.5l-3-1.7L4.2 21.6l1-4.6-1.4-1.25v-8.5z" />
+                <path d="M7.6 11.6h2l1.3-2.8 2 5.6 1.3-2.8h2.2" class="stroke-accent" />
+              </svg>
+            </span>
+            <span class="text-xl font-extrabold text-mainColor">Synapse</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1 rounded-2xl bg-secondaryColor p-1">
+            <a
+              routerLink="/login"
+              routerLinkActive="bg-mainColor! text-white! shadow-sm"
+              class="cursor-pointer rounded-xl py-2 text-center text-sm font-bold text-slate-600 transition hover:text-mainColor"
+            >
+              Login
+            </a>
+            <a
+              routerLink="/register"
+              routerLinkActive="bg-mainColor! text-white! shadow-sm"
+              class="cursor-pointer rounded-xl py-2 text-center text-sm font-bold text-slate-600 transition hover:text-mainColor"
+            >
+              Register
+            </a>
+          </div>
+
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

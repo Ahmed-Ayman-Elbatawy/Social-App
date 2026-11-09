@@ -1,0 +1,291 @@
+<h2 class="mt-6 text-2xl font-bold text-slate-900">Create a new account</h2>
+<p class="mt-1 text-xs text-slate-500">It is quick and easy.</p>
+
+<form (ngSubmit)="sendRegisterData()" [formGroup]="registerForm" class="mt-5 space-y-3">
+  <div class="relative">
+    <i
+      class="fa-regular fa-user pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <input
+      [class]="{
+        'border-green-700': registerForm.get('name')?.valid && registerForm.get('name')?.touched,
+        'border-red-700': registerForm.get('name')?.invalid && registerForm.get('name')?.touched,
+      }"
+      formControlName="name"
+      type="text"
+      id="name"
+      name="name"
+      placeholder="Full name"
+      class="h-11.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    />
+  </div>
+  @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          @if (registerForm.get('name')?.hasError('required')) {
+            <li>Full Name is required.</li>
+          }
+          @if (registerForm.get('name')?.hasError('minlength')) {
+            <li>Name must be at least 3 characters.</li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+
+  <div class="relative">
+    <i
+      class="fa-solid fa-at pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <input
+      formControlName="username"
+      type="text"
+      id="username"
+      name="username"
+      placeholder="Username (optional)"
+      class="h-11.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    />
+  </div>
+
+  <div class="relative">
+    <i
+      class="fa-solid fa-at pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <input
+      [class]="{
+        'border-green-700': registerForm.get('email')?.valid,
+        'border-red-700': registerForm.get('email')?.invalid && registerForm.get('email')?.touched,
+      }"
+      formControlName="email"
+      type="email"
+      id="email"
+      name="email"
+      placeholder="Email address"
+      class="h-11.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    />
+  </div>
+  @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          @if (registerForm.get('email')?.hasError('required')) {
+            <li>Email is required.</li>
+          }
+          @if (registerForm.get('email')?.hasError('pattern')) {
+            <li>Please enter a valid email address.</li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+
+  <div class="relative">
+    <i
+      class="fa-solid fa-user-group pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <select
+      [class]="{
+        'border-green-700': registerForm.get('gender')?.valid,
+        'border-red-700':
+          registerForm.get('gender')?.invalid && registerForm.get('gender')?.touched,
+      }"
+      formControlName="gender"
+      id="gender"
+      name="gender"
+      class="h-12.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    >
+      <option value="" disabled selected>Select gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </div>
+  @if (registerForm.get('gender')?.invalid && registerForm.get('gender')?.touched) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          @if (registerForm.get('gender')?.hasError('required')) {
+            <li>Gender is required.</li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+
+  <div class="relative">
+    <i
+      class="fa-regular fa-calendar pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <input
+      [class]="{
+        'border-green-700': registerForm.get('dateOfBirth')?.valid,
+        'border-red-700':
+          registerForm.get('dateOfBirth')?.invalid && registerForm.get('dateOfBirth')?.touched,
+      }"
+      formControlName="dateOfBirth"
+      type="date"
+      id="dateOfBirth"
+      name="dateOfBirth"
+      class="h-12.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    />
+  </div>
+  @if (registerForm.get('dateOfBirth')?.invalid && registerForm.get('dateOfBirth')?.touched) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          @if (registerForm.get('dateOfBirth')?.hasError('required')) {
+            <li>Date of birth is required.</li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+
+  <div class="relative">
+    <i
+      class="fa-solid fa-key pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <input
+      [class]="{
+        'border-green-700': registerForm.get('password')?.valid,
+        'border-red-700':
+          registerForm.get('password')?.invalid && registerForm.get('password')?.touched,
+      }"
+      [type]="showPass() ? 'text' : 'password'"
+      formControlName="password"
+      type="password"
+      id="password"
+      name="password"
+      placeholder="Password"
+      class="h-11.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    />
+    <button
+      type="button"
+      (click)="showPass.set(!showPass())"
+      [attr.aria-label]="showPass() ? 'Hide password' : 'Show password'"
+      class="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-slate-400 transition hover:bg-mainColor/10 hover:text-mainColor focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    >
+      <i [class]="showPass() ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
+    </button>
+  </div>
+  @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          @if (registerForm.get('password')?.hasError('required')) {
+            <li>Password is required.</li>
+          }
+          @if (registerForm.get('password')?.hasError('pattern')) {
+            <li>
+              Must contain at least 8 chars, 1 uppercase, 1 lowercase, 1 number, and 1 special.
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+
+  <div class="relative">
+    <i
+      class="fa-solid fa-key pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+    ></i>
+    <input
+      [class]="{
+        'border-green-700': registerForm.get('rePassword')?.valid,
+        'border-red-700':
+          registerForm.get('rePassword')?.invalid && registerForm.get('rePassword')?.touched,
+      }"
+      formControlName="rePassword"
+      [type]="showRe() ? 'text' : 'password'"
+      type="password"
+      id="repassword"
+      name="repassword"
+      placeholder="Confirm password"
+      class="h-11.5 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-mainColor focus:bg-white focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    />
+    <button
+      type="button"
+      (click)="showRe.set(!showRe())"
+      [attr.aria-label]="showRe() ? 'Hide password' : 'Show password'"
+      class="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-slate-400 transition hover:bg-mainColor/10 hover:text-mainColor focus:outline-none focus:ring-2 focus:ring-mainColor/20"
+    >
+      <i [class]="showRe() ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
+    </button>
+  </div>
+  @if (
+    registerForm.get('rePassword')?.hasError('required') && registerForm.get('rePassword')?.touched
+  ) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          <li>Please confirm your password.</li>
+          @if (registerForm.hasError('mismatch')) {
+            <li>Passwords do not match.</li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+  @if (registerForm.hasError('mismatch') && registerForm.get('rePassword')?.touched) {
+    <div
+      class="flex items-start gap-3 p-3 mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-xl transition-all duration-300"
+      role="alert"
+    >
+      <i class="fa-solid fa-circle-exclamation text-red-500 text-base mt-0.5 flex-shrink-0"></i>
+
+      <div class="flex-1 font-medium">
+        <ul class="list-none space-y-1">
+          <li>Passwords do not match.</li>
+        </ul>
+      </div>
+    </div>
+  }
+
+  <button
+    type="submit"
+    class="mt-1 h-12 w-full cursor-pointer rounded-xl bg-mainColor text-sm font-bold text-white transition hover:bg-mainColor/90 focus:outline-none focus:ring-4 focus:ring-mainColor/30 disabled:bg-gray-400"
+  >
+    Create New Account
+  </button>
+  @if (msgText()) {
+    <div
+      class="flex items-center gap-3 px-4 py-3 text-sm text-red-700 bg-red-50/80 border border-red-200/80 rounded-xl shadow-xs"
+      role="alert"
+    >
+      <i class="fa-solid fa-triangle-exclamation text-red-500 text-lg flex-shrink-0"></i>
+      <p class="font-medium flex-1" id="errorMessage">
+        {{ msgText() }}
+      </p>
+    </div>
+  }
+</form>
