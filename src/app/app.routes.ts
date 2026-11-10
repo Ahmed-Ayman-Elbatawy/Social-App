@@ -74,7 +74,7 @@ export const routes: Routes = [
       {
         path: 'change-password',
         component: ChangePasswordComponent,
-        title: 'Change Synapse | Password',
+        title: 'Change Synapse | Change Password',
       },
       { path: 'postdetails/:id', component: DetailsComponent, title: 'Synapse | Post Details' },
     ],
