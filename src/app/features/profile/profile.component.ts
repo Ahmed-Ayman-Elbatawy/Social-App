@@ -28,6 +28,9 @@ export class ProfileComponent implements OnInit {
   isViewingCover = signal<boolean>(false);
   isViewingProfilePhoto = signal<boolean>(false);
 
+  coverToolsOpen = signal(false);
+  avatarToolsOpen = signal(false);
+
   ngOnInit(): void {
     this.getMyProfile();
   }

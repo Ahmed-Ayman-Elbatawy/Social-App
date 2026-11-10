@@ -238,7 +238,9 @@
                     <div class="flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
                       <span class="truncate font-mono text-[11px]">@{{ post.user.username }}</span>
                       <span>·</span>
-                      <span class="font-mono text-[11px]">{{ post.createdAt }}</span>
+                      <span class="font-mono text-[11px]">{{
+                        post.createdAt | date: 'MMM d, h:mm a'
+                      }}</span>
                       <span>·</span>
 
                       <div class="relative">
