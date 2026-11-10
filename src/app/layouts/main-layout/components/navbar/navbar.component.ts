@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit {
     this.getUnreadCount();
     setInterval(() => {
       this.getUnreadCount();
-    }, 30000);
+    }, 1000);
   }
 
   logOut(): void {
