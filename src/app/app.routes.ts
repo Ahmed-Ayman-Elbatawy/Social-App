@@ -21,8 +21,8 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     canActivate: [guestGuard],
     children: [
-      { path: 'login', component: LoginComponent, title: 'Login' },
-      { path: 'register', component: RegisterComponent, title: 'Register' },
+      { path: 'login', component: LoginComponent, title: 'Synapse | Login' },
+      { path: 'register', component: RegisterComponent, title: 'Synapse | Register' },
     ],
   },
   {
@@ -30,38 +30,55 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: 'my-profile', component: ProfileComponent, title: 'My Profile' },
-      { path: 'user-profile/:id', component: UserprofileComponent, title: 'User Profile' },
+      { path: 'my-profile', component: ProfileComponent, title: 'Synapse | My Profile' },
+      {
+        path: 'user-profile/:id',
+        component: UserprofileComponent,
+        title: 'Synapse | User Profile',
+      },
       {
         path: 'timeline',
         component: TimelineComponent,
         children: [
-          { path: '', component: PostsComponent, data: { source: 'feed' }, title: 'News Feed' },
+          {
+            path: '',
+            component: PostsComponent,
+            data: { source: 'feed' },
+            title: 'Synapse | News Feed',
+          },
           {
             path: 'my-posts',
             component: PostsComponent,
             data: { source: 'mine' },
-            title: 'My Posts',
+            title: 'Synapse | My Posts',
           },
           {
             path: 'community',
             component: PostsComponent,
             data: { source: 'community' },
-            title: 'Community',
+            title: 'Synapse | Community',
           },
           {
             path: 'saved',
             component: PostsComponent,
             data: { source: 'saved' },
-            title: 'Saved Posts',
+            title: 'Synapse | Saved Posts',
           },
         ],
       },
-      { path: 'notifications', component: NotificationsComponent, title: 'Notifications' },
-      { path: 'change-password', component: ChangePasswordComponent, title: 'Change Password' },
-      { path: 'postdetails/:id', component: DetailsComponent, title: 'Post Details' },
+      {
+        path: 'notifications',
+        component: NotificationsComponent,
+        title: 'Synapse | Notifications',
+      },
+      {
+        path: 'change-password',
+        component: ChangePasswordComponent,
+        title: 'Change Synapse | Password',
+      },
+      { path: 'postdetails/:id', component: DetailsComponent, title: 'Synapse | Post Details' },
     ],
   },
-  { path: 'notfound', component: NotfoundComponent, title: 'Page Not Found' },
+  { path: 'notfound', component: NotfoundComponent, title: 'Synapse | Page Not Found' },
   { path: '**', redirectTo: 'notfound', pathMatch: 'full' },
 ];
