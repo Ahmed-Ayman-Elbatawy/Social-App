@@ -72,17 +72,22 @@
     @if (friends().length > 0) {
       @for (friend of friends(); track friend._id) {
         <div
-          [routerLink]="['/user-profile', friend.username]"
           class="cursor-pointer rounded-2xl border border-gray-200 p-3 transition hover:border-mainColor/30 hover:bg-mainColor/5"
         >
           <div class="flex items-center gap-3">
             <img
+              [routerLink]="['/user-profile', friend._id]"
               [src]="friend.photo"
               [alt]="friend.name"
               class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-mainColor/20"
             />
             <div class="min-w-0 flex-1">
-              <p class="truncate text-sm font-bold text-slate-900">{{ friend.name }}</p>
+              <p
+                [routerLink]="['/user-profile', friend._id]"
+                class="truncate text-sm font-bold text-slate-900 hover:underline hover:text-mainColor"
+              >
+                {{ friend.name }}
+              </p>
               <p class="truncate font-mono text-[11px] text-slate-500">@{{ friend.username }}</p>
             </div>
             <button
