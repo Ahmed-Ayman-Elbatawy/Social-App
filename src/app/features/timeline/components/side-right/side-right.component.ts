@@ -20,7 +20,7 @@ export class SideRightComponent implements OnInit {
   }
 
   getSuggestedUsers(limit: number = 5, q: string = ''): void {
-    this.authService.getsuggestedUsers(limit, q).subscribe({
+    this.authService.getsuggestedUsers(this.limit(), q).subscribe({
       next: (res) => {
         this.friends.set(res.data.suggestions);
       },

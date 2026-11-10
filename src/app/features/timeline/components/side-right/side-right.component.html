@@ -17,7 +17,6 @@
     >
   </div>
 
-  <!-- Search -->
   <div class="relative mt-4">
     <i
       class="fa-solid fa-magnifying-glass pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400"
@@ -30,7 +29,6 @@
     />
   </div>
 
-  <!-- List -->
   <div class="mt-4 space-y-3">
     @if (friends().length === 0) {
       <div
@@ -71,7 +69,6 @@
         </svg>
       </div>
     }
-    <!-- Friend card (كرره لكل صديق) -->
     @if (friends().length > 0) {
       @for (friend of friends(); track friend._id) {
         <div
